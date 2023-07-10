@@ -19,18 +19,7 @@ stages:
       - job: Validate
         displayName: Azure Wiki sync Azure Repos
         steps:
-          - checkout: self
-          - task: GitHub@1
-            inputs:
-              connection: 'github.com_dsoeiro'
-              repository: 'dsoeiro/azure-devops-docs'
-              fetchDepth: 1
-          - script: |
-              cp -R $(Build.SourcesDirectory)/* $(Build.SourcesDirectory)/$(wiki.provision.name)
-              cd $(Build.SourcesDirectory)/$(wiki.provision.name)
-              git config --global user.name "Daniel Soeiro dos Santos"
-              git config --global user.email "daniel.soeiro@fibrasil.com.br"
-              git add .
-              git commit -m "$(Build.DefinitionName)-$(Build.SourceVersionMessage)"
-              git push origin main
-            displayName: Copy, Commit, and Push
+          - checkout: git://github.com/dsoeiro/azure-devops-docs.git
+            clean: true
+            persistCredentials: true
+            displayName: Clone GitHub repository
