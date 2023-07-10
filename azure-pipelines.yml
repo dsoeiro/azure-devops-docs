@@ -19,7 +19,7 @@ stages:
       - job: Validate
         displayName: Azure Wiki sync Azure Repos
         steps:
-          - checkout: git://github.com/dsoeiro/azure-devops-docs.git
+          - checkout: git://github.com/MicrosoftDocs/azure-devops-docs.git
             clean: true
             persistCredentials: true
             displayName: Clone GitHub repository
