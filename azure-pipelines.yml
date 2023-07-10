@@ -1,0 +1,36 @@
+trigger:
+  branches:
+    include:
+      - main
+
+name: $(Build.DefinitionName)_$(Date:yyyyMMdd)_$(Rev:r)
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - group: DevOpsTools
+  - name: pat
+    value: '$(PAT-IvoFulco)'
+
+stages:
+  - stage: 'Syncing'
+    jobs:
+      - job: Validate
+        displayName: Azure Wiki sync Azure Repos
+        steps:
+          - checkout: self
+          - task: GitHub@1
+            inputs:
+              connection: 'github.com_dsoeiro'
+              repository: 'dsoeiro/azure-devops-docs'
+              fetchDepth: 1
+          - script: |
+              cp -R $(Build.SourcesDirectory)/* $(Build.SourcesDirectory)/$(wiki.provision.name)
+              cd $(Build.SourcesDirectory)/$(wiki.provision.name)
+              git config --global user.name "Daniel Soeiro dos Santos"
+              git config --global user.email "daniel.soeiro@fibrasil.com.br"
+              git add .
+              git commit -m "$(Build.DefinitionName)-$(Build.SourceVersionMessage)"
+              git push origin main
+            displayName: Copy, Commit, and Push
